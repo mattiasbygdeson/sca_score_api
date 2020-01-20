@@ -17,60 +17,60 @@ const collectionName = "scoreboard";
 db.initialize(dbName, collectionName, function(dbCollection) {
   // Get the entire score list
   //
-  // server.get("/api/score", (request, response) => {
-  //   dbCollection.find().toArray((error, result) => {
-  //       if (error) throw error;
-  //       response.json(result);
-  //   });
-  // });
+  server.get("/api/score", (request, response) => {
+    dbCollection.find().toArray((error, result) => {
+        if (error) throw error;
+        response.json(result);
+    });
+  });
 
   // Add new item to score list
   //
-  // server.post("/api/score", (request, response) => {
-  //   const item = request.body;
+  server.post("/api/score", (request, response) => {
+    const item = request.body;
 
-  //   dbCollection.insertOne(item, (error, result) => {
-  //       if (error) throw error;
+    dbCollection.insertOne(item, (error, result) => {
+        if (error) throw error;
 
-  //       dbCollection.find().toArray((error, result) => {
-  //           if (error) throw error;
-  //           response.json(result);
-  //       });
-  //   });
-  // });
+        dbCollection.find().toArray((error, result) => {
+            if (error) throw error;
+            response.json(result);
+        });
+    });
+  });
 
   // Delete a selected item from score list
   //
-  // server.delete("/api/score/:id", (request, response) => {
-  //   const itemId = request.params._id;
-  //   console.log("Delete item with id: ", itemId);
+  server.delete("/api/score/:id", (request, response) => {
+    const itemId = request.params._id;
+    console.log("Delete item with id: ", itemId);
 
-  //   dbCollection.deleteOne({ id: itemId }, function(error, result) {
-  //       if (error) throw error;
+    dbCollection.deleteOne({ id: itemId }, function(error, result) {
+        if (error) throw error;
 
-  //       dbCollection.find().toArray(function(_error, _result) {
-  //           if (_error) throw _error;
-  //           response.json(_result);
-  //       });
-  // });
+        dbCollection.find().toArray(function(_error, _result) {
+            if (_error) throw _error;
+            response.json(_result);
+        });
+  });
 
   // Update a selected item with new data
   //
-  // server.put("/api/score/:id", (request, response) => {
-  //   const itemId = request.params._id;
-  //   const item = request.body;
-  //   console.log("Editing item: ", itemId, " to be ", item);
+  server.put("/api/score/:id", (request, response) => {
+    const itemId = request.params._id;
+    const item = request.body;
+    console.log("Editing item: ", itemId, " to be ", item);
 
-  //   dbCollection.updateOne({ id: itemId }, { $set: item }, (error, result) => {
-  //       if (error) throw error;
+    dbCollection.updateOne({ id: itemId }, { $set: item }, (error, result) => {
+        if (error) throw error;
 
-  //       dbCollection.find().toArray(function(_error, _result) {
-  //           if (_error) throw _error;
-  //           response.json(_result);
-  //       });
-  //     });
-  //   });
-  // });
+        dbCollection.find().toArray(function(_error, _result) {
+            if (_error) throw _error;
+            response.json(_result);
+        });
+      });
+    });
+  });
 
 }, function(err) {
   throw (err);
