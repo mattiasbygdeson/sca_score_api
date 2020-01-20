@@ -8,12 +8,12 @@ server.use(body_parser.json());
 
 const port = 4000;
 
-// << db setup >>
+// DB setup
 const db = require("./db");
 const dbName = "sca_game";
 const collectionName = "scoreboard";
 
-// << db init >>
+// DB init
 db.initialize(dbName, collectionName, function(dbCollection) {
   // Get the entire score list
   //
@@ -22,6 +22,15 @@ db.initialize(dbName, collectionName, function(dbCollection) {
         if (error) throw error;
         response.json(result);
     });
+  });
+
+  // Set headers
+  //
+  server.all("/*", (request, response, next) => {
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type,Accept');
+    next();
   });
 
   // Add new item to score list
