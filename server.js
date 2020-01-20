@@ -65,12 +65,12 @@ db.initialize(dbName, collectionName, function(dbCollection) {
 
   // Update a selected item with new data
   //
-  server.put("/api/score/:id", (request, response) => {
-    const itemId = request.params._id;
+  server.put("/api/score/:phone", (request, response) => {
+    const itemId = request.params.phone;
     const item = request.body;
     console.log("Editing item: ", itemId, " to be ", item);
 
-    dbCollection.updateOne({ id: itemId }, { $set: item }, (error, result) => {
+    dbCollection.updateOne({ phone: itemId }, { $set: item }, (error, result) => {
         if (error) throw error;
 
         dbCollection.find().toArray(function(_error, _result) {
