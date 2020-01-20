@@ -77,6 +77,12 @@ db.initialize(dbName, collectionName, function(dbCollection) {
 });
 
 // << db init >>
-server.listen(port, () => {
-  console.log(`Server listening at ${port}`);
+// server.listen(port, () => {
+//   console.log(`Server listening at ${port}`);
+// });
+
+// Initialize the app.
+var app = server.listen(process.env.PORT || 8080, function () {
+  var port = app.address().port;
+  console.log("App now running on port", port);
 });
