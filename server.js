@@ -15,15 +15,6 @@ const collectionName = "scoreboard";
 
 // DB init
 db.initialize(dbName, collectionName, function(dbCollection) {
-  // Get the entire score list
-  //
-  server.get("/api/score", (request, response) => {
-    dbCollection.find().toArray((error, result) => {
-        if (error) throw error;
-        response.json(result);
-    });
-  });
-
   // Set headers
   //
   server.all("/*", (request, response, next) => {
@@ -31,6 +22,15 @@ db.initialize(dbName, collectionName, function(dbCollection) {
     response.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE');
     response.setHeader('Access-Control-Allow-Headers', 'Content-Type,Accept');
     next();
+  });
+
+  // Get the entire score list
+  //
+  server.get("/api/score", (request, response) => {
+    dbCollection.find().toArray((error, result) => {
+        if (error) throw error;
+        response.json(result);
+    });
   });
 
   // Add new item to score list
