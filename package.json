@@ -4,18 +4,15 @@
 	"description": "",
 	"main": "server.js",
 	"dependencies": {
-		"body-parser": "^1.19.0",
+		"body-parser": "^1.18.3",
 		"cors": "^2.8.5",
 		"ejs": "^2.6.1",
-		"express": "^4.17.1",
+		"express": "^4.16.4",
 		"mongodb": "^3.2.3",
-		"mongoose": "^5.8.9",
-		"path": "^0.12.7"
+		"mongoose": "^5.8.10",
+		"nodemon": "^1.18.10"
 	},
-	"devDependencies": {
-		"dotenv": "^8.2.0",
-		"nodemon": "^1.19.4"
-	},
+	"devDependencies": {},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "nodemon server.js"
