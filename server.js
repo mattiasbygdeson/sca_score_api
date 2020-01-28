@@ -1,22 +1,24 @@
 const express = require('express');
 const server = express();
-
 const body_parser = require('body-parser');
+const mongoose = require('mongoose');
 
-// parse JSON (application/json content-type)
+// Parse JSON (application/json content-type)
 server.use(body_parser.json());
 
-const port = 4000;
-
-// DB setup
+// Database setup
 const db = require("./db");
 const dbName = "sca_game";
+
+// Public
 const collectionName = "scoreboard";
 
-// DB init
+// Local (for development)
+// const collectionName = "scoreboard_dev";
+
+// Database init
 db.initialize(dbName, collectionName, function(dbCollection) {
   // Set headers
-  //
   server.all("/*", (request, response, next) => {
     response.setHeader("Access-Control-Allow-Origin", "*");
     response.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE');
@@ -25,72 +27,69 @@ db.initialize(dbName, collectionName, function(dbCollection) {
   });
 
   // Get the entire score list
-  //
-  server.get("/api/score", (request, response) => {
-    dbCollection.find().toArray((error, result) => {
-        if (error) throw error;
-        response.json(result);
-    });
+  server.get("/api/score", async (req, res) => {
+    try {
+      const scoreboard = await dbCollection.find().toArray();
+      res.json(scoreboard);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   });
 
-  server.get("/api/score/:phone", (request, response) => {
-    const phone = request.params.phone;
+  // Get score result based on id
+  server.get("/api/score/:_id", async (req, res) => {
+    const userid = new mongoose.Types.ObjectId(req.params._id);
 
-    dbCollection.findOne({ phone: phone }, (error, result) => {
-        if (error) throw error;
-        // return item
-        response.json(result);
-    });
+    try {
+      const score = await dbCollection.findOne({ "_id": userid });
+      res.json(score);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   });
 
   // Add new item to score list
-  //
-  server.post("/api/score", (request, response) => {
-    const item = request.body;
+  server.post("/api/score", async (req, res) => {
+    const newScore = req.body;
 
-    dbCollection.insertOne(item, (error, result) => {
-        if (error) throw error;
-
-        dbCollection.find().toArray((error, result) => {
-            if (error) throw error;
-            response.json(result);
-        });
-    });
+    try {
+      const score = await dbCollection.insertOne(newScore);
+      res.json(score);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   });
 
-  // Delete a selected item from score list
-  //
-  server.delete("/api/score/:phone", function (request, response) {
-    const phone = request.params.phone;
-    console.log("Delete item with phone: ", phone);
+  // Delete a selected item from score list based on id
+  server.delete("/api/score/:_id", async function(req, res) {
+    const userid = new mongoose.Types.ObjectId(req.params._id);
 
-    dbCollection.deleteOne({ phone: phone }, function(error, result) {
-        if (error) throw error;
-
-        dbCollection.find().toArray(function(_error, _result) {
-            if (_error) throw _error;
-            response.json(_result);
-        });
-    });
+    try {
+      const deleteScore = await dbCollection.deleteOne({ "_id": userid });
+      res.json(deleteScore);
+    } catch(err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
 
   // Update a selected item with new data
   //
-  server.put("/api/score/:phone", (request, response) => {
-    const phone = request.params.phone;
-    const item = request.body;
-    console.log("Editing item: ", phone, " to be ", item);
+  // server.put("/api/score/:phone", function (request, response) {
+  //   const phone = request.params.phone;
+  //   const item = request.body;
+  //   console.log("Editing item: ", phone, " to be ", item);
 
-    dbCollection.updateOne({ phone: phone }, { $set: item }, (error, result) => {
-        if (error) throw error;
-        // send back entire updated list, to make sure frontend data is up-to-date
-        dbCollection.find().toArray(function(_error, _result) {
-            if (_error) throw _error;
-            response.json(_result);
-        });
-    });
-  });
+  //   dbCollection.updateOne({"phone": phone}, {$set: item}, function (error) {
+  //       if (error) throw error;
+  //       // send back entire updated list, to make sure frontend data is up-to-date
+  //       dbCollection.find().toArray(function(_error, _result) {
+  //           if (_error) throw _error;
+  //           response.json(_result);
+  //       });
+  //   });
+  // });
 
-  });
+  // });
 }, function(err) {
   throw (err);
 });
