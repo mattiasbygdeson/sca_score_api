@@ -72,6 +72,19 @@ db.initialize(dbName, collectionName, function(dbCollection) {
     }
   });
 
+  // Update a selected item from score list based on id
+  server.put("/api/score/:_id", async function(req, res) {
+    const userid = new mongoose.Types.ObjectId(req.params._id);
+    const newItem = req.body;
+
+    try {
+      const updateScore = await dbCollection.updateOne({ "_id": userid }, { $set: newItem });
+      res.json(updateScore);
+    } catch(err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   // Update a selected item with new data
   //
   // server.put("/api/score/:phone", function (request, response) {
@@ -87,7 +100,7 @@ db.initialize(dbName, collectionName, function(dbCollection) {
   //           response.json(_result);
   //       });
   //   });
-  // });
+  // }); 
 
   // });
 }, function(err) {
