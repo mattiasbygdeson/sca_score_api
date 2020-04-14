@@ -48,6 +48,18 @@ db.initialize(dbName, collectionName, function(dbCollection) {
     }
   });
 
+  // Get score result based on type
+  server.get("/api/score/type/:type", async (req, res) => {
+    const type = req.params.type;
+
+    try {
+      const score = await dbCollection.find({ "type": type }).toArray();
+      res.json(score);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   // Add new item to score list
   server.post("/api/score", async (req, res) => {
     const newScore = req.body;
@@ -84,6 +96,19 @@ db.initialize(dbName, collectionName, function(dbCollection) {
       res.status(500).json({ message: err.message });
     }
   });
+
+  // Add new value to entire database
+  // server.put("/api/score", async function(req, res) {
+  //   // const userid = new mongoose.Types.ObjectId(req.params._id);
+  //   const newField = req.body;
+
+  //   try {
+  //     const updateScore = await dbCollection.updateMany({}, { $set: newField },false,true);
+  //     res.json(updateScore);
+  //   } catch(err) {
+  //     res.status(500).json({ message: err.message });
+  //   }
+  // });
 
   // Update a selected item with new data
   //
